@@ -25,6 +25,7 @@ Thumbs.db
 /SwordLegend/*.csproj
 /SwordLegend/*.unityproj
 /SwordLegend/*.sln
+/SwordLegend/*.slnx
 /SwordLegend/*.suo
 /SwordLegend/*.tmp
 /SwordLegend/*.user
