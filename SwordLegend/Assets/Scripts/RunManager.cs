@@ -1,80 +1,94 @@
 using UnityEngine;
 
-/// <summary>
-/// RunState を更新して、ゲーム進行を管理するクラス。
-/// 今はデモ用として、季節を1つ進める最低限の処理だけ持つ。
-/// </summary>
-public class RunManager : MonoBehaviour
+namespace Game.Run
 {
     /// <summary>
-    /// 現在のゲーム進行状態を保持するインスタンス。
+    /// RunState を更新して、ゲーム進行を管理するクラス。
+    /// 今はデモ用として、季節を1つ進める最低限の処理だけ持つ。
     /// </summary>
-    public RunState CurrentRun = new RunState();
-
-    private void Start()
+    public class RunManager : MonoBehaviour
     {
-        Debug.Log($"開始時点: {CurrentRun.Year}年 {GetSeasonLabel(CurrentRun.Quarter)}");
+        /// <summary>
+        /// 現在のゲーム進行状態を保持するインスタンス。
+        /// </summary>
+        [SerializeField] private RunState currentRun = new();
+        public RunState CurrentRun => currentRun;
 
-        for (int i = 0; i < 5; i++)
+        private void Start()
         {
-            AdvanceQuarter();
-            Debug.Log($"{i + 1}回目: {CurrentRun.Year}年 {GetSeasonLabel(CurrentRun.Quarter)}");
+            Debug.Log(
+                $"開始時点: {CurrentRun.Year}年 {GetSeasonLabel(CurrentRun.Quarter)} / " +
+                $"剣: {CurrentRun.Sword.Name} / " +
+                $"伝説値: {CurrentRun.Sword.LegendPoints}"
+            );
+
+            for (int i = 0; i < 5; i++)
+            {
+                AdvanceQuarter();
+                Debug.Log(
+                    $"{i + 1}回目: {CurrentRun.Year}年 {GetSeasonLabel(CurrentRun.Quarter)} / " +
+                    $"年表件数: {CurrentRun.Chronicle.Count}"
+                );
+            }
+
+            Debug.Log($"最終的な年表件数: {CurrentRun.Chronicle.Count}");
         }
 
-        Debug.Log($"最終的な年表件数: {CurrentRun.Chronicle.Count}");
-    }
-
-    /// <summary>
-    /// 1クール進める。
-    /// 春→夏→秋→冬→翌年の春、という順番で季節を進める。
-    /// </summary>
-    public void AdvanceQuarter()
-    {
-        switch (CurrentRun.Quarter)
+        /// <summary>
+        /// 1クール進める。
+        /// 春→夏→秋→冬→翌年の春、という順番で季節を進める。
+        /// 今後、SeasonCycleクラスに切り出す予定だが、デモ段階ではここで完結させる。
+        /// </summary>
+        public void AdvanceQuarter()
         {
-            case Season.Spring:
-                CurrentRun.Quarter = Season.Summer;
-                break;
+            switch (CurrentRun.Quarter)
+            {
+                case Season.Spring:
+                    CurrentRun.SetQuarter(Season.Summer);
+                    break;
 
-            case Season.Summer:
-                CurrentRun.Quarter = Season.Autumn;
-                break;
+                case Season.Summer:
+                    CurrentRun.SetQuarter(Season.Autumn);
+                    break;
 
-            case Season.Autumn:
-                CurrentRun.Quarter = Season.Winter;
-                break;
+                case Season.Autumn:
+                    CurrentRun.SetQuarter(Season.Winter);
+                    break;
 
-            case Season.Winter:
-                CurrentRun.Quarter = Season.Spring;
-                CurrentRun.Year += 1;
-                break;
+                case Season.Winter:
+                    CurrentRun.SetQuarter(Season.Spring);
+                    CurrentRun.AddYear(1);
+                    break;
+            }
+
+            // デモ用に、季節が進むたび年表ログを追加する
+            CurrentRun.AddChronicle(
+                $"{CurrentRun.Year}年 {GetSeasonLabel(CurrentRun.Quarter)} へ進んだ"
+            );
         }
 
-        // デモ用に、季節が進むたび年表ログを追加する
-        CurrentRun.Chronicle.Add($"{CurrentRun.Year}年 {GetSeasonLabel(CurrentRun.Quarter)} へ進んだ");
-    }
-
-    /// <summary>
-    /// Season enum を日本語表示用の文字列に変換する。
-    /// </summary>
-    private string GetSeasonLabel(Season season)
-    {
-        switch (season)
+        /// <summary>
+        /// Season enum を日本語表示用の文字列に変換する。
+        /// </summary>
+        private string GetSeasonLabel(Season season)
         {
-            case Season.Spring:
-                return "春";
+            switch (season)
+            {
+                case Season.Spring:
+                    return "春";
 
-            case Season.Summer:
-                return "夏";
+                case Season.Summer:
+                    return "夏";
 
-            case Season.Autumn:
-                return "秋";
+                case Season.Autumn:
+                    return "秋";
 
-            case Season.Winter:
-                return "冬";
+                case Season.Winter:
+                    return "冬";
 
-            default:
-                return "";
+                default:
+                    return "";
+            }
         }
     }
 }
