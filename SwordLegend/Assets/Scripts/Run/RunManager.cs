@@ -6,6 +6,7 @@ namespace Game.Run
     /// RunState を更新して、ゲーム進行を管理するクラス。
     /// 今はデモ用として、季節を1つ進める最低限の処理だけ持つ。
     /// </summary>
+    [System.Serializable]
     public class RunManager : MonoBehaviour
     {
         /// <summary>
