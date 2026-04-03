@@ -15,25 +15,28 @@ namespace Game.Run
         [SerializeField] private RunState currentRun = new();
         public RunState CurrentRun => currentRun;
 
-        private void Start()
-        {
-            Debug.Log(
-                $"開始時点: {CurrentRun.Year}年 {GetSeasonLabel(CurrentRun.Quarter)} / " +
-                $"剣: {CurrentRun.Sword.Name} / " +
-                $"伝説値: {CurrentRun.Sword.LegendPoints}"
-            );
+    private void Start()
+    {
+        CharacterGenerator generator = new CharacterGenerator();
+        CharacterState character = generator.GenerateCharacter();
 
-            for (int i = 0; i < 5; i++)
-            {
-                AdvanceQuarter();
-                Debug.Log(
-                    $"{i + 1}回目: {CurrentRun.Year}年 {GetSeasonLabel(CurrentRun.Quarter)} / " +
-                    $"年表件数: {CurrentRun.Chronicle.Count}"
-                );
-            }
+        Debug.Log(BuildCharacterSummary(character));
+    }
 
-            Debug.Log($"最終的な年表件数: {CurrentRun.Chronicle.Count}");
-        }
+    private string BuildCharacterSummary(CharacterState character)
+    {
+        return
+            $"Name: {character.CharacterName}\n" +
+            $"Age: {character.Age}\n" +
+            $"MaxHp: {character.Stats.MaxHp}\n" +
+            $"PhysicalAttack: {character.Stats.PhysicalAttack}\n" +
+            $"MagicAttack: {character.Stats.MagicAttack}\n" +
+            $"PhysicalDefense: {character.Stats.PhysicalDefense}\n" +
+            $"MagicDefense: {character.Stats.MagicDefense}\n" +
+            $"Speed: {character.Stats.Speed}\n" +
+            $"Childhood: {character.ChildhoodEvent.Name}\n" +
+            $"Teen: {character.TeenEvent.Name}";
+    }
 
         /// <summary>
         /// 1クール進める。
