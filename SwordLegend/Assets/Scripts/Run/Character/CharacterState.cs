@@ -13,16 +13,24 @@ namespace Game.Run
         private CharacterStats stats;
         private CharacterSkills skills;
 
+        private LifeHistoryEvent childhoodEvent;
+        private LifeHistoryEvent teenEvent;
+
         public string CharacterName => characterName;
         public int Age => age;
         public CharacterStats Stats => stats;
         public CharacterSkills Skills => skills;
 
+        public LifeHistoryEvent ChildhoodEvent => childhoodEvent;
+        public LifeHistoryEvent TeenEvent => teenEvent;
+
         public CharacterState(
             string characterName,
             int age,
             CharacterStats stats,
-            CharacterSkills skills)
+            CharacterSkills skills,
+            LifeHistoryEvent childhoodEvent,
+            LifeHistoryEvent teenEvent)
         {
             if (stats == null)
             {
@@ -38,6 +46,8 @@ namespace Game.Run
             this.age = Math.Max(0, age);
             this.stats = stats;
             this.skills = skills;
+            this.childhoodEvent = childhoodEvent;
+            this.teenEvent = teenEvent;
         }
 
         public void SetCharacterName(string newName)
